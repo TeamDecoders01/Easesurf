@@ -5,8 +5,8 @@
     "type": "module",
     "scripts": {
         "build": "vite build && cp manifest.json dist/manifest.json",
-        "lint": "biome lint --write ./src",
-        "format": "biome format --write ./src",
+        "lint": "bunx @biomejs/biome lint --write ./src",
+        "format": "bunx @biomejs/biome format --write ./src",
         "preview": "vite preview"
     },
     "dependencies": {
