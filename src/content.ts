@@ -8,7 +8,6 @@ chrome.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
         stopAutoScroll();
     }
 });
-// src/Content.ts
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'getSelectedText') {
         const selectedText = window.getSelection()?.toString() || '';
