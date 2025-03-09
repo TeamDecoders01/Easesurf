@@ -1,8 +1,16 @@
-import { applySimplifiedUIMode } from './scripts/ui';
+import { startAutoScroll, stopAutoScroll } from './scripts/AutoScroll';
 
-chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
-    if (message.type === 'UPDATE_FONT_SIZE' && message.fontSize) {
-        applySimplifiedUIMode(message.fontSize);
-        sendResponse({ status: 'success' });
+chrome.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
+    console.log('Content script received:', request);
+    if (request.action === 'startScroll') {
+        startAutoScroll();
+    } else if (request.action === 'stopScroll') {
+        stopAutoScroll();
+    }
+});
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'getSelectedText') {
+        const selectedText = window.getSelection()?.toString() || '';
+        sendResponse({ text: selectedText });
     }
 });

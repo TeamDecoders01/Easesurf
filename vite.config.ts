@@ -1,6 +1,6 @@
-import react from '@vitejs/plugin-react-swc';
-import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { resolve } from 'node:path';
 
 export default defineConfig({
     plugins: [react()],
@@ -11,11 +11,7 @@ export default defineConfig({
                 content: resolve(__dirname, 'src/content.ts'),
             },
             output: {
-                entryFileNames: (chunk) => {
-                    if (chunk.name === 'popup') return 'popup.js';
-                    if (chunk.name === 'content') return 'content.js';
-                    return '[name].js';
-                },
+                entryFileNames: '[name].js',
             },
         },
     },
