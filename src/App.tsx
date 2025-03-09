@@ -1,39 +1,47 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
+import { type ReactNode, useState } from 'react';
 
-function App() {
-    const [count, setCount] = useState(0);
+export default function App(): ReactNode {
+    const [size, setSize] = useState<number>(18);
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newSize = Number.parseInt(e.target.value, 10);
+        if (!Number.isNaN(newSize)) {
+            setSize(newSize);
+            chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+                if (tabs[0]?.id) {
+                    chrome.tabs.sendMessage(
+                        tabs[0].id,
+                        { type: 'UPDATE_FONT_SIZE', fontSize: newSize },
+                        (response) => {
+                            if (chrome.runtime.lastError) {
+                                console.error(
+                                    'Message error:',
+                                    chrome.runtime.lastError.message,
+                                );
+                            } else {
+                                console.log('Response:', response);
+                            }
+                        },
+                    );
+                }
+            });
+        }
+    };
 
     return (
-        <>
-            <div>
-                <a href="https://vite.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
-                <a href="https://react.dev" target="_blank">
-                    <img
-                        src={reactLogo}
-                        className="logo react"
-                        alt="React logo"
+        <div>
+            <div style={{ padding: '1rem' }}>
+                <h1>Simplified UI Mode Controller</h1>
+                <label>
+                    Enter Font Size (px):{' '}
+                    <input
+                        type="number"
+                        value={size}
+                        onChange={handleInputChange}
+                        style={{ marginLeft: '0.5rem', width: '80px' }}
                     />
-                </a>
+                </label>
             </div>
-            <h1>Vite + React</h1>
-            <div className="card">
-                <button onClick={() => setCount((count) => count + 1)}>
-                    count is {count}
-                </button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
-            </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
-        </>
+        </div>
     );
 }
-
-export default App;
