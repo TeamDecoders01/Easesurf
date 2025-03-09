@@ -1,8 +1,17 @@
 {
     "manifest_version": 3,
-    "name": "EaseSurf",
-    "version": "0.1.0",
+    "name": "Simplified UI Mode",
+    "version": "1.0",
+    "description": "Simplifies the UI by hiding unnecessary elements and improving readability.",
     "action": {
-        "default_popup": "index.html"
-    }
-}
+      "default_popup": "index.html"
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["content.js"],
+        "run_at": "document_idle"
+      }
+    ],
+    "permissions": ["activeTab"]
+  }
