@@ -1,10 +1,14 @@
-import type React from "react";
-import Scroll from "./components/Scroll";
-import Reader from "./components/Reader";
+import type { ReactElement } from 'react';
+import Reader from './components/Reader';
+import Scroll from './components/Scroll';
+import SimpleUI from './components/SimpleUI';
 
-const App: React.FC = () => {
+export default function App(): ReactElement {
     return (
         <>
+            <div>
+                <SimpleUI />
+            </div>
             <div>
                 <Scroll />
             </div>
@@ -13,6 +17,4 @@ const App: React.FC = () => {
             </div>
         </>
     );
-};
-
-export default App;
+}
