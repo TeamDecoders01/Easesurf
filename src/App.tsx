@@ -10,10 +10,12 @@ import SimpleUI from './components/SimpleUI';
 import Mag from './components/Mag';
 import ContrastMode from './components/ContrastMode';
 import AutoClickControl from './components/AutoClickControl';
+        import BlueScreenFilter from './components/BlueScreenFilter';
+import ReminderServices from './components/ReminderServices';
 
 export default function App(): ReactElement {
     return (
-        <>
+        <div className="p-2 space-y-4">
             <div>
                 <SimpleUI />
             </div>
@@ -24,6 +26,12 @@ export default function App(): ReactElement {
                 <Reader />
             </div>
             <div>
+                <BlueScreenFilter />
+            </div>
+            <div className="mt-6 p-4 border rounded-md bg-gray-50">
+                <ReminderServices />
+            </div>
+        </div>
                 <ChatUI />
             </div>
             <div>

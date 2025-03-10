@@ -1,8 +1,13 @@
 {
     "manifest_version": 3,
-    "name": "Simplified UI Mode",
+    "name": "Reading Assistant",
     "version": "1.0",
-    "description": "Simplifies the UI by hiding unnecessary elements and improving readability.",
+    "description": "Auto-scroll and blue light filter for better reading",
+    "permissions": ["storage", "tabs", "activeTab"],
+    "host_permissions": ["<all_urls>"],
+    "background": {
+        "service_worker": "background.js"
+    },
     "action": {
         "default_popup": "index.html"
     },
