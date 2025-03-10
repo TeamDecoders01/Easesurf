@@ -4,9 +4,6 @@
     "version": "1.0",
     "description": "Assistance for the Elderly & Physically Challenged",
     "host_permissions": ["<all_urls>"],
-    "background": {
-        "service_worker": "background.js"
-    },
     "action": {
         "default_popup": "index.html"
     },
@@ -17,5 +14,15 @@
             "run_at": "document_idle"
         }
     ],
-    "permissions": ["activeTab", "storage", "scripting"]
+    "background": {
+        "service_worker": "background.js"
+    },
+    "permissions": [
+        "storage",
+        "tabs",
+        "activeTab",
+        "scripting",
+        "contextMenus",
+        "tts"
+    ]
 }
