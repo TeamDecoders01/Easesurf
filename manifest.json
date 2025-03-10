@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Reading Assistant",
+    "name": "EaseSurf",
     "version": "1.0",
-    "description": "Auto-scroll and blue light filter for better reading",
+    "description": "Assistance for the Elderly & Physically Challenged",
     "host_permissions": ["<all_urls>"],
     "background": {
         "service_worker": "background.js"

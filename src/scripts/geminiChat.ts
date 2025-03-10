@@ -1,4 +1,4 @@
-const API_KEY = ''; //import.meta.env.VITE_GEMINI_API_KEY;
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 const API_URL =
     'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
@@ -32,10 +32,17 @@ export async function getAIResponse(query: string): Promise<string> {
         const data = await response.json();
         console.log('API Response:', data);
 
-        return (
+        const aiResponseText =
             data.candidates?.[0]?.content?.parts?.[0]?.text ||
-            "Sorry, I couldn't understand."
-        );
+            "Sorry, I couldn't understand.";
+
+        // Send the AI response to the pop-up window
+        chrome.runtime.sendMessage({
+            type: 'aiResponse',
+            text: aiResponseText,
+        });
+
+        return aiResponseText;
     } catch (error) {
         console.error('Error fetching AI response:', error);
         return 'There was an error processing your request.';

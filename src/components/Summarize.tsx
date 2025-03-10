@@ -2,7 +2,6 @@ import { useState } from "react";
 import { summarizeText } from "../scripts/summarise";
 
 const Summarize: React.FC = () => {
-    const [summary, setSummary] = useState("");
     const [loading, setLoading] = useState(false);
 
     const handleSummarize = () => {
@@ -12,7 +11,7 @@ const Summarize: React.FC = () => {
                 chrome.scripting.executeScript(
                     {
                         target: { tabId: tabs[0].id },
-                        func: () => document.body.innerText, // Extract text from page
+                        func: () => document.body.innerText,
                     },
                     async (results) => {
                         const pageText = results?.[0]?.result || "";
@@ -20,9 +19,9 @@ const Summarize: React.FC = () => {
                             const summaryResponse = await summarizeText(
                                 pageText
                             );
-                            setSummary(summaryResponse);
+                            openPopUp(summaryResponse);
                         } else {
-                            setSummary("No text found to summarize.");
+                            openPopUp("No text found to summarize.");
                         }
                         setLoading(false);
                     }
@@ -31,9 +30,23 @@ const Summarize: React.FC = () => {
         });
     };
 
+    const openPopUp = (summary: string) => {
+        chrome.windows.create(
+            {
+                url: `data:text/html,<html><head><title>Summary</title></head><body style="background-color: black; color: white; font-size: 30px; padding: 20px;"><h1>Summary</h1><p>${summary}</p></body></html>`,
+                type: "popup",
+                width: 1000,
+                height: 700,
+            },
+            (window) => {}
+        );
+    };
+
     return (
         <div className="p-4 w-80 border rounded-lg shadow-lg bg-white">
-            <h1 className="text-lg font-bold mb-4">AI Summarizer</h1>
+            <h2 className="text-lg font-bold mb-4">
+                <strong>AI Summarizer</strong>
+            </h2>
             <button
                 type="button"
                 onClick={handleSummarize}
@@ -42,9 +55,6 @@ const Summarize: React.FC = () => {
             >
                 {loading ? "Summarizing..." : "Summarize Page"}
             </button>
-            {summary && (
-                <p className="mt-4 p-2 border bg-gray-100">{summary}</p>
-            )}
         </div>
     );
 };

@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { startReminders, stopReminders } from '../scripts/reminderService';
+import { useState, useEffect, useCallback } from "react";
+import { startReminders, stopReminders } from "../scripts/reminderService";
 
 interface ReminderServicesProps {
     onStatusChange?: (isActive: boolean) => void;
@@ -13,25 +13,25 @@ const ReminderServices: React.FC<ReminderServicesProps> = ({
     autoStart = false,
 }) => {
     const [isActive, setIsActive] = useState<boolean>(autoStart);
-    const [lastMessage, setLastMessage] = useState<string>('');
+    const [lastMessage, setLastMessage] = useState<string>("");
     const [isExtensionAvailable, setIsExtensionAvailable] =
         useState<boolean>(true);
     const [notificationPermission, setNotificationPermission] =
-        useState<string>('default');
+        useState<string>("default");
 
     // Check if Chrome extension is available and request notification permission
     useEffect(() => {
         // Check if we're in a browser environment and if Chrome extension API is available
         const extensionAvailable =
-            typeof chrome !== 'undefined' && !!chrome.runtime;
+            typeof chrome !== "undefined" && !!chrome.runtime;
         setIsExtensionAvailable(extensionAvailable);
 
         // If extension is not available, check for Notification API support
-        if (!extensionAvailable && 'Notification' in window) {
+        if (!extensionAvailable && "Notification" in window) {
             setNotificationPermission(Notification.permission);
 
             // Request permission if not granted yet
-            if (Notification.permission !== 'granted') {
+            if (Notification.permission !== "granted") {
                 Notification.requestPermission().then((permission) => {
                     setNotificationPermission(permission);
                 });
@@ -45,18 +45,18 @@ const ReminderServices: React.FC<ReminderServicesProps> = ({
             // First try to use the extension API if available
             if (isExtensionAvailable && chrome?.runtime) {
                 chrome.runtime.sendMessage({
-                    type: 'SHOW_NOTIFICATION',
+                    type: "SHOW_NOTIFICATION",
                     payload: { message },
                 });
             }
             // Fall back to Web Notification API
             else if (
-                'Notification' in window &&
-                notificationPermission === 'granted'
+                "Notification" in window &&
+                notificationPermission === "granted"
             ) {
-                new Notification('Health Reminder', {
+                new Notification("Health Reminder", {
                     body: message,
-                    icon: '/icon128.png', // Make sure this path is correct
+                    icon: "/icon128.png", // Make sure this path is correct
                 });
             }
 
@@ -66,7 +66,7 @@ const ReminderServices: React.FC<ReminderServicesProps> = ({
                 onReminder(message);
             }
         },
-        [isExtensionAvailable, notificationPermission, onReminder],
+        [isExtensionAvailable, notificationPermission, onReminder]
     );
 
     // Initialize component state
@@ -105,9 +105,11 @@ const ReminderServices: React.FC<ReminderServicesProps> = ({
 
     return (
         <div className="reminder-services">
-            <h2 className="text-xl font-bold mb-2">Health Reminders</h2>
+            <h2 className="text-xl font-bold mb-2">
+                <strong>Health Reminders</strong>
+            </h2>
 
-            {!isExtensionAvailable && notificationPermission !== 'granted' && (
+            {!isExtensionAvailable && notificationPermission !== "granted" && (
                 <div className="mb-3 p-2 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded">
                     ⚠️ Notification permission is required for reminders to
                     appear as system notifications.
@@ -120,19 +122,19 @@ const ReminderServices: React.FC<ReminderServicesProps> = ({
                     onClick={toggleReminders}
                     className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
                 >
-                    {isActive ? 'Stop Reminders' : 'Start Reminders'}
+                    {isActive ? "Stop Reminders" : "Start Reminders"}
                 </button>
 
                 <div className="reminder-status">
-                    Status:{' '}
+                    Status:{" "}
                     <span
                         className={
                             isActive
-                                ? 'text-green-600 font-medium'
-                                : 'text-red-600 font-medium'
+                                ? "text-green-600 font-medium"
+                                : "text-red-600 font-medium"
                         }
                     >
-                        {isActive ? 'Active' : 'Inactive'}
+                        {isActive ? "Active" : "Inactive"}
                     </span>
                 </div>
 

@@ -114,7 +114,6 @@ function initializeContentScript() {
     });
 }
 
-
 // Create a global instance of PageMagnifier
 const pageMagnifier = new PageMagnifier(200, 2);
 let autoClickHelper: AutoClickHelper = initAutoClick();
@@ -177,12 +176,18 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     sendResponse({ status: 'Scroll action handled' });
 });
 
-chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
-    if (request.action === 'getSelectedText') {
+chrome.runtime.onMessage.addListener((request) => {
+    if (request.action === 'selectedText') {
         const selectedText = window.getSelection()?.toString() || '';
-        sendResponse({ text: selectedText });
+        if (selectedText.trim()) {
+            chrome.runtime.sendMessage({
+                action: 'selectedText',
+                text: selectedText,
+            });
+        }
     }
 });
+
 chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     if (request.action === 'startChat') {
         sendResponse({ status: 'Chat started' });
@@ -203,49 +208,9 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     }
 });
 
-function createFloatingButton(): void {
-    if (document.getElementById('my-floating-button')) return;
-
-    const btn = document.createElement('button');
-    btn.id = 'my-floating-button';
-    btn.textContent = 'Open Extension';
-
-    Object.assign(btn.style, {
-        position: 'fixed',
-        bottom: '20px',
-        right: '20px',
-        zIndex: '9999',
-        padding: '12px 16px',
-        borderRadius: '50px',
-        backgroundColor: '#6200EE',
-        color: '#fff',
-        border: 'none',
-        boxShadow: '0 2px 6px rgba(0,0,0,0.3)',
-        cursor: 'pointer',
-        fontSize: '14px',
-    });
-
-    btn.addEventListener('click', () => {
-        chrome.runtime.sendMessage(
-            { type: 'OPEN_EXTENSION_UI' },
-            (response) => {
-                if (chrome.runtime.lastError) {
-                    console.error(
-                        'Message error:',
-                        chrome.runtime.lastError.message,
-                    );
-                } else {
-                    console.log('Extension UI opened:', response);
-                }
-            },
-        );
-    });
-
-    document.body.appendChild(btn);
-}
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', createFloatingButton);
-} else {
-    createFloatingButton();
-}
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+    if (request.action === 'replaceText') {
+        document.body.innerText = request.text;
+        sendResponse({ status: 'Text replaced successfully!' });
+    }
+});
