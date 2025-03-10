@@ -22,7 +22,6 @@ const Popup: React.FC = () => {
             <AutoClickControl />
             <Summarize />
             <ChatUI />
-            <Reader />
         </div>
     );
 };
