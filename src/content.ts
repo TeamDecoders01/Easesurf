@@ -1,12 +1,7 @@
+import { toggleHighContrast, toggleNightMode } from './scripts/Contrast';
 import { PageMagnifier } from './scripts/Magnify';
 import { startAutoScroll, stopAutoScroll } from './scripts/Scroll';
 import { applySimplifiedUIMode } from './scripts/ui';
-// Import the new contrast mode functions
-import {
-    toggleHighContrast,
-    toggleNightMode,
-    initAccessibilityModes,
-} from './scripts/Contrast';
 
 import {
     type AutoClickHelper,
@@ -28,7 +23,7 @@ chrome.storage.sync.get(['autoClickEnabled', 'autoClickDelay'], (result) => {
     }
 });
 
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
     // Your existing magnifier message handling
     if (message.action === 'enable') {
         pageMagnifier.start().then(() => {
@@ -64,15 +59,16 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
     // Return true to indicate we'll respond asynchronously
     return true;
-}
+});
 
-chrome.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     console.log('Content script received:', request);
     if (request.action === 'startScroll') {
         startAutoScroll();
     } else if (request.action === 'stopScroll') {
         stopAutoScroll();
     }
+    sendResponse({ status: 'Scroll action handled' });
 });
 
 chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
@@ -89,8 +85,10 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
 
 chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     if (request.action === 'summarizePage') {
-        const pageText = document.body.innerText; 
+        const pageText = document.body.innerText;
         sendResponse({ text: pageText });
+    }
+});
 
 chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     if (request.action === 'updateFontSize' && request.fontSize) {
