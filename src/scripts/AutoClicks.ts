@@ -1,11 +1,9 @@
-// scripts/AutoClick.ts
-
 /**
  * Class to handle auto-clicking of elements after hovering for a set duration
  */
 export class AutoClickHelper {
     private hoverTimer: number | null = null;
-    private hoverDelay: number; // Time in ms to wait before auto-clicking
+    private hoverDelay: number;
     private isEnabled = false;
     private currentElement: Element | null = null;
     private highlightClass = 'accessibility-hover-highlight';
@@ -106,12 +104,10 @@ export class AutoClickHelper {
     private handleMouseOver = (event: MouseEvent): void => {
         const target = event.target as Element;
 
-        // Check if element is clickable (links, buttons, or elements with click handlers)
         if (this.isClickable(target)) {
             this.currentElement = target;
             this.addHighlight(target);
 
-            // Start timer for auto-click
             this.hoverTimer = window.setTimeout(() => {
                 if (this.currentElement === target) {
                     this.performClick(target);
@@ -123,7 +119,7 @@ export class AutoClickHelper {
     /**
      * Handle mouse out events
      */
-    private handleMouseOut = (event: MouseEvent): void => {
+    private handleMouseOut = (): void => {
         if (this.hoverTimer) {
             window.clearTimeout(this.hoverTimer);
             this.hoverTimer = null;
@@ -137,10 +133,8 @@ export class AutoClickHelper {
      * Check if an element is clickable
      */
     private isClickable(element: Element): boolean {
-        // Check for commonly clickable elements
         const tagName = element.tagName.toLowerCase();
 
-        // Direct clickable elements
         if (
             tagName === 'a' ||
             tagName === 'button' ||
@@ -154,8 +148,6 @@ export class AutoClickHelper {
             return true;
         }
 
-        // Check for elements with click event listeners (simplified approach)
-        // This is a limited check as we can't fully detect all elements with JS click handlers
         const style = window.getComputedStyle(element);
         return style.cursor === 'pointer';
     }
@@ -164,7 +156,7 @@ export class AutoClickHelper {
      * Add highlight to element
      */
     private addHighlight(element: Element): void {
-        this.removeHighlight(); // Remove any existing highlights
+        this.removeHighlight();
         element.classList.add(this.highlightClass);
     }
 
@@ -181,11 +173,9 @@ export class AutoClickHelper {
      * Perform the click action on the target element
      */
     private performClick(element: Element): void {
-        // Remove highlight first
         this.removeHighlight();
 
         try {
-            // Create and dispatch a click event
             const clickEvent = new MouseEvent('click', {
                 view: window,
                 bubbles: true,
@@ -194,7 +184,6 @@ export class AutoClickHelper {
 
             element.dispatchEvent(clickEvent);
 
-            // Provide visual feedback of the click
             this.showClickFeedback(element);
         } catch (error) {
             console.error('Auto-click failed:', error);
@@ -209,7 +198,6 @@ export class AutoClickHelper {
         feedback.style.position = 'absolute';
         feedback.style.zIndex = '99999';
 
-        // Get element position
         const rect = element.getBoundingClientRect();
         feedback.style.left = `${rect.left + rect.width / 2}px`;
         feedback.style.top = `${rect.top + rect.height / 2}px`;
@@ -221,7 +209,6 @@ export class AutoClickHelper {
         feedback.style.backgroundColor = 'rgba(66, 133, 244, 0.5)';
         feedback.style.animation = 'click-feedback 0.5s ease-out forwards';
 
-        // Add animation styles
         const style = document.createElement('style');
         style.textContent = `
             @keyframes click-feedback {
@@ -233,7 +220,6 @@ export class AutoClickHelper {
 
         document.body.appendChild(feedback);
 
-        // Remove after animation completes
         setTimeout(() => {
             if (feedback.parentNode) {
                 feedback.parentNode.removeChild(feedback);

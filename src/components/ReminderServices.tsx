@@ -19,18 +19,14 @@ const ReminderServices: React.FC<ReminderServicesProps> = ({
     const [notificationPermission, setNotificationPermission] =
         useState<string>('default');
 
-    // Check if Chrome extension is available and request notification permission
     useEffect(() => {
-        // Check if we're in a browser environment and if Chrome extension API is available
         const extensionAvailable =
             typeof chrome !== 'undefined' && !!chrome.runtime;
         setIsExtensionAvailable(extensionAvailable);
 
-        // If extension is not available, check for Notification API support
         if (!extensionAvailable && 'Notification' in window) {
             setNotificationPermission(Notification.permission);
 
-            // Request permission if not granted yet
             if (Notification.permission !== 'granted') {
                 Notification.requestPermission().then((permission) => {
                     setNotificationPermission(permission);
@@ -39,28 +35,23 @@ const ReminderServices: React.FC<ReminderServicesProps> = ({
         }
     }, []);
 
-    // Function to show notifications using the appropriate method
     const showNotification = useCallback(
         (message: string) => {
-            // First try to use the extension API if available
             if (isExtensionAvailable && chrome?.runtime) {
                 chrome.runtime.sendMessage({
                     type: 'SHOW_NOTIFICATION',
                     payload: { message },
                 });
-            }
-            // Fall back to Web Notification API
-            else if (
+            } else if (
                 'Notification' in window &&
                 notificationPermission === 'granted'
             ) {
                 new Notification('Health Reminder', {
                     body: message,
-                    icon: '/icon128.png', // Make sure this path is correct
+                    icon: '/icon128.png',
                 });
             }
 
-            // Update the UI regardless of notification method
             setLastMessage(message);
             if (onReminder) {
                 onReminder(message);
@@ -69,9 +60,7 @@ const ReminderServices: React.FC<ReminderServicesProps> = ({
         [isExtensionAvailable, notificationPermission, onReminder],
     );
 
-    // Initialize component state
     useEffect(() => {
-        // If autoStart is true, start reminders
         if (autoStart) {
             startReminders(showNotification);
             if (onStatusChange) {
@@ -79,7 +68,6 @@ const ReminderServices: React.FC<ReminderServicesProps> = ({
             }
         }
 
-        // Clean up on unmount
         return () => {
             if (isActive) {
                 stopReminders();

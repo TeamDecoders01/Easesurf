@@ -2,7 +2,7 @@ const STYLE_ID = 'blue-screen-filter-style';
 const existingStyle = document.getElementById(STYLE_ID);
 
 if (existingStyle) {
-    existingStyle.remove(); // Remove the overlay
+    existingStyle.remove();
 } else {
     const styleElement = document.createElement('style');
     styleElement.id = STYLE_ID;
@@ -19,5 +19,5 @@ if (existingStyle) {
         z-index: 9999;
       }
     `;
-    document.head.appendChild(styleElement); // Add the overlay
+    document.head.appendChild(styleElement);
 }

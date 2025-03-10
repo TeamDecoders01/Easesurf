@@ -1,18 +1,13 @@
-// src/scripts/contrastMode.ts
-
 /**
  * Toggles high contrast mode for better visibility
  * Designed for elderly users with low vision
  */
 export function toggleHighContrast(isEnabled: boolean): void {
-    // Remove night mode if it's active and we're enabling high contrast
     if (isEnabled && document.body.classList.contains('night-mode')) {
         document.body.classList.remove('night-mode');
     }
 
-    // Apply high contrast styles
     if (isEnabled) {
-        // Add a style element if it doesn't exist
         if (!document.getElementById('high-contrast-styles')) {
             const style = document.createElement('style');
             style.id = 'high-contrast-styles';
@@ -44,14 +39,12 @@ export function toggleHighContrast(isEnabled: boolean): void {
             document.head.appendChild(style);
         }
     } else {
-        // Remove high contrast styles
         const styleElement = document.getElementById('high-contrast-styles');
         if (styleElement?.parentNode) {
             styleElement.parentNode.removeChild(styleElement);
         }
     }
 
-    // Save the state
     chrome.storage.sync.set({ highContrastEnabled: isEnabled });
     console.log(`High Contrast Mode ${isEnabled ? 'Enabled' : 'Disabled'}`);
 }
@@ -60,14 +53,11 @@ export function toggleHighContrast(isEnabled: boolean): void {
  * Toggles night mode with warmer colors to reduce eye strain
  */
 export function toggleNightMode(isEnabled: boolean): void {
-    // Remove high contrast if it's active and we're enabling night mode
     if (isEnabled && document.body.classList.contains('high-contrast')) {
         document.body.classList.remove('high-contrast');
     }
 
-    // Apply night mode styles
     if (isEnabled) {
-        // Add a style element if it doesn't exist
         if (!document.getElementById('night-mode-styles')) {
             const style = document.createElement('style');
             style.id = 'night-mode-styles';
@@ -97,14 +87,12 @@ export function toggleNightMode(isEnabled: boolean): void {
             document.head.appendChild(style);
         }
     } else {
-        // Remove night mode styles
         const styleElement = document.getElementById('night-mode-styles');
         if (styleElement?.parentNode) {
             styleElement.parentNode.removeChild(styleElement);
         }
     }
 
-    // Save the state
     chrome.storage.sync.set({ nightModeEnabled: isEnabled });
     console.log(`Night Mode ${isEnabled ? 'Enabled' : 'Disabled'}`);
 }

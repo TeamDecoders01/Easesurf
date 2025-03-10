@@ -10,7 +10,6 @@ import {
 
 console.log('Content script loaded on:', window.location.href);
 
-// Function to toggle the blue screen filter
 function toggleBlueScreenFilter(forceState?: boolean): boolean {
     const OVERLAY_ID = 'blue-screen-filter-overlay';
     const existingOverlay = document.getElementById(OVERLAY_ID);
@@ -22,20 +21,15 @@ function toggleBlueScreenFilter(forceState?: boolean): boolean {
         !!existingOverlay,
     );
 
-    // If forceState is defined, use it; otherwise toggle based on existing element
     const shouldAdd = forceState !== undefined ? forceState : !existingOverlay;
 
-    // Remove existing overlay if it exists
     if (existingOverlay) {
         existingOverlay.remove();
         console.log('Removed existing overlay');
     }
 
-    // Add new overlay if needed
     if (shouldAdd) {
-        // Make sure the body exists before appending
         if (document.body) {
-            // Create overlay div instead of using ::after pseudo-element
             const overlay = document.createElement('div');
             overlay.id = OVERLAY_ID;
             overlay.style.position = 'fixed';
@@ -56,13 +50,11 @@ function toggleBlueScreenFilter(forceState?: boolean): boolean {
         return false;
     }
 
-    // Return current state
     const currentState = !!document.getElementById(OVERLAY_ID);
     console.log('Filter current state:', currentState);
     return currentState;
 }
 
-// Ensure body is ready before initializing
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeContentScript);
 } else {
@@ -70,7 +62,6 @@ if (document.readyState === 'loading') {
 }
 
 function initializeContentScript() {
-    // Listen for scroll messages and other commands
     chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
         console.log('Content script received:', request);
 
@@ -101,11 +92,9 @@ function initializeContentScript() {
             sendResponse({ success: false, error: (error as Error).message });
         }
 
-        // Return true to indicate you wish to send a response asynchronously
         return true;
     });
 
-    // Initialize the filter state when the content script loads
     chrome.runtime.sendMessage({ type: 'getBlueScreenState' }, (response) => {
         console.log('Initial blue screen state:', response);
         if (response?.isActive) {
@@ -114,11 +103,9 @@ function initializeContentScript() {
     });
 }
 
-// Create a global instance of PageMagnifier
 const pageMagnifier = new PageMagnifier(200, 2);
 let autoClickHelper: AutoClickHelper = initAutoClick();
 
-// Initialize settings from storage
 chrome.storage.sync.get(['autoClickEnabled', 'autoClickDelay'], (result) => {
     if (result.autoClickEnabled) {
         autoClickHelper = initAutoClick(
@@ -129,7 +116,6 @@ chrome.storage.sync.get(['autoClickEnabled', 'autoClickDelay'], (result) => {
 });
 
 chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
-    // Your existing magnifier message handling
     if (message.action === 'enable') {
         pageMagnifier.start().then(() => {
             sendResponse({ status: 'Magnifier enabled' });
@@ -137,9 +123,7 @@ chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
     } else if (message.action === 'disable') {
         pageMagnifier.stop();
         sendResponse({ status: 'Magnifier disabled' });
-    }
-    // Contrast mode message handlers
-    else if (message.action === 'toggleHighContrast') {
+    } else if (message.action === 'toggleHighContrast') {
         const isEnabled = document.body.classList.toggle('high-contrast');
         toggleHighContrast(isEnabled);
         sendResponse({ status: 'High Contrast Toggled' });
@@ -147,22 +131,18 @@ chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
         const isEnabled = document.body.classList.toggle('night-mode');
         toggleNightMode(isEnabled);
         sendResponse({ status: 'Night Mode Toggled' });
-    }
-    // New auto-click message handlers
-    else if (message.action === 'toggleAutoClick') {
+    } else if (message.action === 'toggleAutoClick') {
         const isEnabled = toggleAutoClick(message.state, autoClickHelper);
         chrome.storage.sync.set({ autoClickEnabled: isEnabled });
         sendResponse({
             status: `Auto-Click ${isEnabled ? 'Enabled' : 'Disabled'}`,
         });
     } else if (message.action === 'updateAutoClickDelay') {
-        // Recreate the helper with new delay
         autoClickHelper.stop();
         autoClickHelper = initAutoClick(true, message.delay);
         sendResponse({ status: 'Auto-Click Delay Updated' });
     }
 
-    // Return true to indicate we'll respond asynchronously
     return true;
 });
 

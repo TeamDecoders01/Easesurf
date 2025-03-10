@@ -16,7 +16,6 @@ function calculateAccessibilityScore() {
     const totalElements = elements.length;
     const missingAria: Array<HTMLElement> = [];
 
-    // Iterate through elements to check for missing aria-* attributes
     for (const element of elements) {
         const hasAria = Array.from(element.attributes).some((attr) =>
             attr.name.startsWith('aria-'),
@@ -26,16 +25,13 @@ function calculateAccessibilityScore() {
         }
     }
 
-    // Calculate the accessibility score
     const missingCount = missingAria.length;
     const score = 100 * (1 - missingCount / totalElements);
 
-    // Display the results in the console
     console.log('Total Relevant Elements:', totalElements);
     console.log('Elements Missing Aria-* Attributes:', missingAria);
     console.log('Accessibility Score (out of 100):', score.toFixed(2));
 
-    // Provide feedback based on the score
     if (score >= 90) {
         console.log(
             '%cExcellent Accessibility ✅',
@@ -66,5 +62,4 @@ function calculateAccessibilityScore() {
     };
 }
 
-// Run the function
 calculateAccessibilityScore();

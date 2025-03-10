@@ -6,7 +6,6 @@ const BlueScreenFilter: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Get initial state when component mounts
         fetchState();
     }, []);
 

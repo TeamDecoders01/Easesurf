@@ -15,16 +15,14 @@ const ChatUI: React.FC = () => {
         const query = input.trim();
         if (!query) return;
 
-        // Display user message with a unique ID
         const userMessage = {
             id: generateUniqueId(),
             type: 'user' as const,
             text: query,
         };
         setMessages((prev) => [...prev, userMessage]);
-        setInput(''); // clear input field
+        setInput('');
 
-        // Get AI response and display it with a unique ID
         const aiResponse = await getAIResponse(query);
         const aiMessage = {
             id: generateUniqueId(),

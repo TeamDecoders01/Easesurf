@@ -1,19 +1,15 @@
-// Store whether the blue overlay is currently active
 let isBlueOverlayActive = false;
 
 console.log('Background script loaded!');
 
-// Listen for messages from the popup
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     console.log('Background received message:', message);
 
     if (message.type === 'toggleBlueScreen') {
         isBlueOverlayActive = !isBlueOverlayActive;
 
-        // Store the state in Chrome storage for persistence
         chrome.storage.local.set({ isBlueOverlayActive });
 
-        // Apply to all current tabs
         applyBlueOverlayToAllTabs();
 
         sendResponse({ success: true, isActive: isBlueOverlayActive });
@@ -26,18 +22,15 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     }
 });
 
-// When the extension starts, restore the saved state
 chrome.storage.local.get('isBlueOverlayActive', (result) => {
     isBlueOverlayActive = result.isBlueOverlayActive || false;
     console.log('Restored blue screen state:', isBlueOverlayActive);
 
-    // Apply the state to all tabs on startup
     if (isBlueOverlayActive) {
         applyToAllTabs();
     }
 });
 
-// Apply to all tabs when requested
 function applyBlueOverlayToAllTabs() {
     chrome.tabs.query({}, (tabs) => {
         console.log(
@@ -78,7 +71,6 @@ function applyBlueOverlayToAllTabs() {
     });
 }
 
-// When a new tab is loaded, apply the current filter state
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, _tab) => {
     if (changeInfo.status === 'complete') {
         console.log(
@@ -110,31 +102,24 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, _tab) => {
     }
 });
 
-// Import reminder content
 const waterReminder = 'Time to drink water!';
 const stretchReminder = 'Time to stretch and move!';
 
-// Variables to store interval IDs
 let waterIntervalId: string | number | NodeJS.Timeout | undefined;
 let stretchIntervalId: string | number | NodeJS.Timeout | undefined;
 
-// Storage key for persistence
 const STORAGE_KEY = 'health-reminder-active-state';
 
-// Function to start reminders
 function startReminders() {
-    // Water reminder
     waterIntervalId = setInterval(() => {
         showNotification(waterReminder);
-    }, 10000); // every 10 seconds for demo, adjust as needed
+    }, 10000);
 
-    // Stretch reminder
     stretchIntervalId = setInterval(() => {
         showNotification(stretchReminder);
-    }, 15000); // every 15 seconds for demo, adjust as needed
+    }, 15000);
 }
 
-// Function to stop reminders
 function stopReminders() {
     if (waterIntervalId) {
         clearInterval(waterIntervalId);
@@ -147,7 +132,6 @@ function stopReminders() {
     }
 }
 
-// Function to show notification
 function showNotification(message: string) {
     chrome.notifications.create({
         type: 'basic',
@@ -158,7 +142,6 @@ function showNotification(message: string) {
     });
 }
 
-// Initialize reminder state from storage when the background script loads
 chrome.storage.local.get([STORAGE_KEY], (result) => {
     const isActive = result[STORAGE_KEY] === true;
 
@@ -167,16 +150,12 @@ chrome.storage.local.get([STORAGE_KEY], (result) => {
     }
 });
 
-// Listen for messages from the extension's popup or content scripts
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-    // Handle toggle message
     if (message.type === 'TOGGLE_REMINDERS') {
         const isActive = message.payload.isActive;
 
-        // Update storage
         chrome.storage.local.set({ [STORAGE_KEY]: isActive });
 
-        // Start or stop reminders
         if (isActive) {
             startReminders();
             sendResponse({ success: true, status: 'started' });
@@ -186,19 +165,14 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         }
     }
 
-    // Handle get status message
     if (message.type === 'GET_REMINDER_STATUS') {
-        const isActive = !!waterIntervalId; // Check if intervals are active
+        const isActive = !!waterIntervalId;
         sendResponse({ isActive: isActive });
     }
 
-    // Return true to indicate you wish to send a response asynchronously
     return true;
 });
 
-// background.ts for Color Blindness extension
-
-// Define the different types of color blindness
 enum ColorBlindnessType {
     NORMAL = 'normal',
     PROTANOPIA = 'protanopia',
@@ -207,19 +181,16 @@ enum ColorBlindnessType {
     ACHROMATOPSIA = 'achromatopsia',
 }
 
-// Store the current active filter
 let activeColorFilter: ColorBlindnessType = ColorBlindnessType.NORMAL;
 
 console.log('Color Blindness Simulator background script loaded!');
 
-// Listen for messages from the popup
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     console.log('Background received message:', message);
 
     if (message.type === 'applyColorFilter') {
         const { filterType } = message;
 
-        // If toggling the same filter, set to normal
         if (
             filterType === activeColorFilter &&
             filterType !== ColorBlindnessType.NORMAL
@@ -229,10 +200,8 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
             activeColorFilter = filterType;
         }
 
-        // Store the state in Chrome storage for persistence
         chrome.storage.local.set({ activeColorFilter });
 
-        // Apply to all current tabs
         applyToAllTabs();
 
         sendResponse({ success: true, activeFilter: activeColorFilter });
@@ -245,18 +214,15 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     }
 });
 
-// When the extension starts, restore the saved state
 chrome.storage.local.get('activeColorFilter', (result) => {
     activeColorFilter = result.activeColorFilter || ColorBlindnessType.NORMAL;
     console.log('Restored color filter state:', activeColorFilter);
 
-    // Apply the state to all tabs on startup
     if (activeColorFilter !== ColorBlindnessType.NORMAL) {
         applyToAllTabs();
     }
 });
 
-// Apply to all tabs when requested
 function applyToAllTabs() {
     chrome.tabs.query({}, (tabs) => {
         console.log(
@@ -297,7 +263,6 @@ function applyToAllTabs() {
     });
 }
 
-// When a new tab is loaded, apply the current filter state
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, _tab) => {
     if (changeInfo.status === 'complete') {
         console.log(
@@ -335,7 +300,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         chrome.scripting.executeScript({
             target: { tabId: tabId },
             func: () => {
-                // Scan the DOM for elements missing any aria-* attributes.
                 const elements = document.body.querySelectorAll('*');
                 const totalElements = elements.length;
                 const missingAria = [];
@@ -358,46 +322,39 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                 console.log(`Total Elements: ${totalElements}`);
                 console.log(`Missing Aria-* Attributes: ${missingCount}`);
 
-                // Visual accessibility scoring logic
-                const IDEAL_FONT_SIZE_MIN = 12; // in pixels
-                const IDEAL_FONT_SIZE_MAX = 24; // in pixels
+                const IDEAL_FONT_SIZE_MIN = 12;
+                const IDEAL_FONT_SIZE_MAX = 24;
                 const BASE_SCORE = 100;
 
-                // Get the current font size from the root element.
                 const computedFontSize = Number.parseFloat(
                     getComputedStyle(document.documentElement).fontSize,
                 );
                 let visualScore = BASE_SCORE;
 
-                // Penalize score based on font-size deviation.
                 if (computedFontSize < IDEAL_FONT_SIZE_MIN) {
                     visualScore -= (IDEAL_FONT_SIZE_MIN - computedFontSize) * 2;
                 } else if (computedFontSize > IDEAL_FONT_SIZE_MAX) {
                     visualScore -= (computedFontSize - IDEAL_FONT_SIZE_MAX) * 2;
                 }
 
-                // Check if High Contrast Mode is active using the 'forced-colors' media query.
                 const highContrast = window.matchMedia(
                     '(forced-colors: active)',
                 ).matches;
                 if (!highContrast) {
-                    visualScore -= 10; // Deduct points if not in high contrast mode.
+                    visualScore -= 10;
                 }
 
-                // Clamp the visual score between 0 and 100.
                 visualScore = Math.max(0, Math.min(visualScore, 100));
 
                 console.log(
                     `Visual Accessibility Score: ${visualScore.toFixed(2)}`,
                 );
 
-                // Combine the two scores; adjust weighting as needed.
                 const finalScore = (ariaScore + visualScore) / 2;
                 console.log(
                     `Final Accessibility Score: ${finalScore.toFixed(2)}`,
                 );
 
-                // Set the final score as a custom aria attribute on the document's root element.
                 document.documentElement.setAttribute(
                     'aria-a11y-score',
                     finalScore.toFixed(2),

@@ -36,7 +36,6 @@ export async function getAIResponse(query: string): Promise<string> {
             data.candidates?.[0]?.content?.parts?.[0]?.text ||
             "Sorry, I couldn't understand.";
 
-        // Send the AI response to the pop-up window
         chrome.runtime.sendMessage({
             type: 'aiResponse',
             text: aiResponseText,
