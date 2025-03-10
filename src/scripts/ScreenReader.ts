@@ -1,4 +1,3 @@
-// src/TTS.ts
 let speech: SpeechSynthesisUtterance | null = null;
 
 export function startReadingText(text: string, rate = 1.0) {
@@ -7,12 +6,11 @@ export function startReadingText(text: string, rate = 1.0) {
         return;
     }
 
-    // Stop any ongoing speech before starting a new one
     stopReadingText();
 
     speech = new SpeechSynthesisUtterance(text);
-    speech.rate = rate; // Adjust speed of speech
-    speech.voice = window.speechSynthesis.getVoices()[0]; // Use default voice
+    speech.rate = rate;
+    speech.voice = window.speechSynthesis.getVoices()[0];
 
     window.speechSynthesis.speak(speech);
 }

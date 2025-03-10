@@ -1,4 +1,4 @@
-import { startAutoScroll, stopAutoScroll } from './scripts/AutoScroll';
+import { startAutoScroll, stopAutoScroll } from './scripts/Scroll';
 import { applySimplifiedUIMode } from './scripts/ui';
 
 chrome.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
@@ -16,6 +16,16 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
         sendResponse({ text: selectedText });
     }
 });
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+    if (request.action === 'startChat') {
+        sendResponse({ status: 'Chat started' });
+    }
+});
+
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+    if (request.action === 'summarizePage') {
+        const pageText = document.body.innerText; 
+        sendResponse({ text: pageText });
 
 chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
     if (request.action === 'updateFontSize' && request.fontSize) {
