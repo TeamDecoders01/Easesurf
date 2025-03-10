@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { translateText } from "../scripts/translate";
+import { useState } from 'react';
+import { translateText } from '../scripts/translate';
 
 const LanguageConverter: React.FC = () => {
-    const [selectedLanguage, setSelectedLanguage] = useState("es");
-    const [status, setStatus] = useState("");
+    const [selectedLanguage, setSelectedLanguage] = useState('es');
+    const [status, setStatus] = useState('');
 
     const handleTranslate = async () => {
-        setStatus("Translating...");
+        setStatus('Translating...');
 
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0]?.id) {
@@ -16,24 +16,24 @@ const LanguageConverter: React.FC = () => {
                         func: () => document.body.innerText,
                     },
                     async (results) => {
-                        const pageText = results?.[0]?.result || "";
+                        const pageText = results?.[0]?.result || '';
                         if (!pageText.trim()) {
-                            setStatus("No text found to translate.");
+                            setStatus('No text found to translate.');
                             return;
                         }
 
                         const translatedText = await translateText(
                             pageText,
-                            selectedLanguage
+                            selectedLanguage,
                         );
                         if (tabs[0].id !== undefined) {
                             chrome.tabs.sendMessage(tabs[0].id, {
-                                action: "replaceText",
+                                action: 'replaceText',
                                 text: translatedText,
                             });
                         }
-                        setStatus("Translation Complete!");
-                    }
+                        setStatus('Translation Complete!');
+                    },
                 );
             }
         });

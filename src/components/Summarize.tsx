@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { summarizeText } from "../scripts/summarise";
+import { useState } from 'react';
+import { summarizeText } from '../scripts/summarise';
 
 const Summarize: React.FC = () => {
     const [loading, setLoading] = useState(false);
@@ -14,17 +14,16 @@ const Summarize: React.FC = () => {
                         func: () => document.body.innerText,
                     },
                     async (results) => {
-                        const pageText = results?.[0]?.result || "";
+                        const pageText = results?.[0]?.result || '';
                         if (pageText) {
-                            const summaryResponse = await summarizeText(
-                                pageText
-                            );
+                            const summaryResponse =
+                                await summarizeText(pageText);
                             openPopUp(summaryResponse);
                         } else {
-                            openPopUp("No text found to summarize.");
+                            openPopUp('No text found to summarize.');
                         }
                         setLoading(false);
-                    }
+                    },
                 );
             }
         });
@@ -34,11 +33,11 @@ const Summarize: React.FC = () => {
         chrome.windows.create(
             {
                 url: `data:text/html,<html><head><title>Summary</title></head><body style="background-color: black; color: white; font-size: 30px; padding: 20px;"><h1>Summary</h1><p>${summary}</p></body></html>`,
-                type: "popup",
+                type: 'popup',
                 width: 1000,
                 height: 700,
             },
-            (window) => {}
+            (window) => {},
         );
     };
 
@@ -53,7 +52,7 @@ const Summarize: React.FC = () => {
                 className="bg-blue-500 text-white p-2 rounded w-full"
                 disabled={loading}
             >
-                {loading ? "Summarizing..." : "Summarize Page"}
+                {loading ? 'Summarizing...' : 'Summarize Page'}
             </button>
         </div>
     );

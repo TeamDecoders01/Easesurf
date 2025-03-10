@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 const ContrastMode: React.FC = () => {
     const [isHighContrastActive, setIsHighContrastActive] = useState(false);
@@ -6,11 +6,11 @@ const ContrastMode: React.FC = () => {
 
     useEffect(() => {
         chrome.storage.sync.get(
-            ["highContrastEnabled", "nightModeEnabled"],
+            ['highContrastEnabled', 'nightModeEnabled'],
             (result) => {
                 setIsHighContrastActive(result.highContrastEnabled || false);
                 setIsNightModeActive(result.nightModeEnabled || false);
-            }
+            },
         );
     }, []);
 
@@ -19,22 +19,22 @@ const ContrastMode: React.FC = () => {
             if (tabs[0]?.id) {
                 chrome.tabs.sendMessage(
                     tabs[0].id,
-                    { action: "toggleHighContrast" },
+                    { action: 'toggleHighContrast' },
                     (response) => {
                         if (chrome.runtime.lastError) {
                             console.error(
-                                "Message error:",
-                                chrome.runtime.lastError.message
+                                'Message error:',
+                                chrome.runtime.lastError.message,
                             );
                         } else {
-                            console.log("Response:", response);
+                            console.log('Response:', response);
                             const newState = !isHighContrastActive;
                             setIsHighContrastActive(newState);
                             if (newState && isNightModeActive) {
                                 setIsNightModeActive(false);
                             }
                         }
-                    }
+                    },
                 );
             }
         });
@@ -45,15 +45,15 @@ const ContrastMode: React.FC = () => {
             if (tabs[0]?.id) {
                 chrome.tabs.sendMessage(
                     tabs[0].id,
-                    { action: "toggleNightMode" },
+                    { action: 'toggleNightMode' },
                     (response) => {
                         if (chrome.runtime.lastError) {
                             console.error(
-                                "Message error:",
-                                chrome.runtime.lastError.message
+                                'Message error:',
+                                chrome.runtime.lastError.message,
                             );
                         } else {
-                            console.log("Response:", response);
+                            console.log('Response:', response);
                             const newState = !isNightModeActive;
                             setIsNightModeActive(newState);
 
@@ -61,7 +61,7 @@ const ContrastMode: React.FC = () => {
                                 setIsHighContrastActive(false);
                             }
                         }
-                    }
+                    },
                 );
             }
         });
@@ -77,7 +77,7 @@ const ContrastMode: React.FC = () => {
                 <button
                     type="button"
                     className={`px-4 py-2 rounded-lg text-white flex items-center justify-between ${
-                        isHighContrastActive ? "bg-blue-600" : "bg-gray-500"
+                        isHighContrastActive ? 'bg-blue-600' : 'bg-gray-500'
                     }`}
                     onClick={toggleHighContrast}
                 >
@@ -87,7 +87,7 @@ const ContrastMode: React.FC = () => {
                 <button
                     type="button"
                     className={`px-4 py-2 rounded-lg text-white flex items-center justify-between ${
-                        isNightModeActive ? "bg-amber-600" : "bg-gray-500"
+                        isNightModeActive ? 'bg-amber-600' : 'bg-gray-500'
                     }`}
                     onClick={toggleNightMode}
                 >

@@ -1,6 +1,6 @@
-import type React from "react";
-import { useState } from "react";
-import { FaPlay, FaPause } from "react-icons/fa";
+import type React from 'react';
+import { useState } from 'react';
+import { FaPlay, FaPause } from 'react-icons/fa';
 
 const Scroll: React.FC = () => {
     const [isScrolling, setIsScrolling] = useState(false);
@@ -8,7 +8,7 @@ const Scroll: React.FC = () => {
     const handleStart = () => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0].id) {
-                chrome.tabs.sendMessage(tabs[0].id, { action: "startScroll" });
+                chrome.tabs.sendMessage(tabs[0].id, { action: 'startScroll' });
                 setIsScrolling(true);
             }
         });
@@ -17,7 +17,7 @@ const Scroll: React.FC = () => {
     const handleStop = () => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0].id) {
-                chrome.tabs.sendMessage(tabs[0].id, { action: "stopScroll" });
+                chrome.tabs.sendMessage(tabs[0].id, { action: 'stopScroll' });
                 setIsScrolling(false);
             }
         });

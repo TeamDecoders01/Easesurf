@@ -80,11 +80,10 @@ button:focus-visible {
     color: white;
 }
 
-.popup-container>div {
+.popup-container > div {
     margin-bottom: 16px;
     /* Optional if you want to fine-tune the spacing */
 }
-
 
 @media (prefers-color-scheme: light) {
     :root {

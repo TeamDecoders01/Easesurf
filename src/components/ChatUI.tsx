@@ -1,14 +1,14 @@
-import type React from "react";
-import { useState } from "react";
-import { FaPaperPlane } from "react-icons/fa";
-import { getAIResponse } from "../scripts/geminiChat";
+import type React from 'react';
+import { useState } from 'react';
+import { FaPaperPlane } from 'react-icons/fa';
+import { getAIResponse } from '../scripts/geminiChat';
 
 const generateUniqueId = () => `message-${Date.now()}-${Math.random()}`;
 
 const ChatUI: React.FC = () => {
-    const [input, setInput] = useState("");
+    const [input, setInput] = useState('');
     const [messages, setMessages] = useState<
-        { id: string; type: "user" | "ai"; text: string }[]
+        { id: string; type: 'user' | 'ai'; text: string }[]
     >([]);
 
     const handleSendMessage = async () => {
@@ -18,17 +18,17 @@ const ChatUI: React.FC = () => {
         // Display user message with a unique ID
         const userMessage = {
             id: generateUniqueId(),
-            type: "user" as const,
+            type: 'user' as const,
             text: query,
         };
         setMessages((prev) => [...prev, userMessage]);
-        setInput(""); // clear input field
+        setInput(''); // clear input field
 
         // Get AI response and display it with a unique ID
         const aiResponse = await getAIResponse(query);
         const aiMessage = {
             id: generateUniqueId(),
-            type: "ai" as const,
+            type: 'ai' as const,
             text: aiResponse,
         };
         setMessages((prev) => [...prev, aiMessage]);
@@ -44,12 +44,12 @@ const ChatUI: React.FC = () => {
                     <p
                         key={msg.id}
                         className={
-                            msg.type === "user"
-                                ? "text-right text-blue-600"
-                                : "text-left text-gray-700"
+                            msg.type === 'user'
+                                ? 'text-right text-blue-600'
+                                : 'text-left text-gray-700'
                         }
                     >
-                        <strong>{msg.type === "user" ? "You" : "AI"}:</strong>{" "}
+                        <strong>{msg.type === 'user' ? 'You' : 'AI'}:</strong>{' '}
                         {msg.text}
                     </p>
                 ))}

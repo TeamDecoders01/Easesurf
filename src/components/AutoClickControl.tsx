@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 const AutoClickControl: React.FC = () => {
     const [isAutoClickActive, setIsAutoClickActive] = useState(false);
@@ -6,11 +6,11 @@ const AutoClickControl: React.FC = () => {
 
     useEffect(() => {
         chrome.storage.sync.get(
-            ["autoClickEnabled", "autoClickDelay"],
+            ['autoClickEnabled', 'autoClickDelay'],
             (result) => {
                 setIsAutoClickActive(result.autoClickEnabled || false);
                 setHoverDelay(result.autoClickDelay || 3);
-            }
+            },
         );
     }, []);
 
@@ -20,18 +20,18 @@ const AutoClickControl: React.FC = () => {
                 chrome.tabs.sendMessage(
                     tabs[0].id,
                     {
-                        action: "toggleAutoClick",
+                        action: 'toggleAutoClick',
                         state: !isAutoClickActive,
                         delay: hoverDelay * 1000,
                     },
                     (response) => {
                         if (chrome.runtime.lastError) {
                             console.error(
-                                "Message error:",
-                                chrome.runtime.lastError.message
+                                'Message error:',
+                                chrome.runtime.lastError.message,
                             );
                         } else {
-                            console.log("Response:", response);
+                            console.log('Response:', response);
                             const newState = !isAutoClickActive;
                             setIsAutoClickActive(newState);
 
@@ -40,7 +40,7 @@ const AutoClickControl: React.FC = () => {
                                 autoClickDelay: hoverDelay,
                             });
                         }
-                    }
+                    },
                 );
             }
         });
@@ -58,7 +58,7 @@ const AutoClickControl: React.FC = () => {
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
                 if (tabs[0]?.id) {
                     chrome.tabs.sendMessage(tabs[0].id, {
-                        action: "updateAutoClickDelay",
+                        action: 'updateAutoClickDelay',
                         delay: newDelay * 1000,
                     });
                 }
@@ -76,7 +76,7 @@ const AutoClickControl: React.FC = () => {
                 <button
                     type="button"
                     className={`px-4 py-2 rounded-lg text-white flex items-center justify-between ${
-                        isAutoClickActive ? "bg-green-600" : "bg-gray-500"
+                        isAutoClickActive ? 'bg-green-600' : 'bg-gray-500'
                     }`}
                     onClick={toggleAutoClick}
                 >

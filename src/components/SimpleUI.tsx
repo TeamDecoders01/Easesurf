@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type ReactNode } from "react";
+import { useState, type ChangeEvent, type ReactNode } from 'react';
 
 export default function SimpleUI(): ReactNode {
     const [size, setSize] = useState(18);
@@ -16,8 +16,8 @@ export default function SimpleUI(): ReactNode {
 
             chrome.tabs.sendMessage(
                 tab,
-                { action: "updateFontSize", fontSize: newSize },
-                console.log
+                { action: 'updateFontSize', fontSize: newSize },
+                console.log,
             );
         });
     };

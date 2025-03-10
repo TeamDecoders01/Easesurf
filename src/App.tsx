@@ -1,6 +1,6 @@
-import "./App.css";
-import type { ReactElement } from "react";
-import Popup from "./popup";
+import './App.css';
+import type { ReactElement } from 'react';
+import Popup from './popup';
 
 export default function App(): ReactElement {
     return (
