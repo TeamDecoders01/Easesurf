@@ -1,17 +1,32 @@
 {
     "manifest_version": 3,
-    "name": "Simplified UI Mode",
+    "name": "Reading Assistant",
     "version": "1.0",
-    "description": "Simplifies the UI by hiding unnecessary elements and improving readability.",
+    "description": "Auto-scroll and blue light filter for better reading",
+    "permissions": ["storage", "tabs", "activeTab"],
+    "host_permissions": ["<all_urls>"],
+    "background": {
+        "service_worker": "background.js"
+    },
     "action": {
-      "default_popup": "index.html"
+        "default_popup": "index.html"
     },
     "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["content.js"],
-        "run_at": "document_idle"
-      }
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"],
+            "run_at": "document_end"
+        }
     ],
-    "permissions": ["activeTab"]
-  }
+
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "rgblind/rgblind.js",
+                "rgblind/rgblind.css",
+                "rgblind/rgblind.svg"
+            ],
+            "matches": ["<all_urls>"]
+        }
+    ]
+}

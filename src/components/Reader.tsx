@@ -1,26 +1,26 @@
 // src/TTSUI.tsx
-import type React from "react";
-import { useState } from "react";
-import { FaPlay, FaStop } from "react-icons/fa";
-import { startReadingText, stopReadingText } from "../scripts/ScreenReader";
+import type React from 'react';
+import { useState } from 'react';
+import { FaPlay, FaStop } from 'react-icons/fa';
+import { startReadingText, stopReadingText } from '../scripts/ScreenReader';
 
 const Reader: React.FC = () => {
     const [isReading, setIsReading] = useState(false);
-    const [text, setText] = useState("");
+    const [text, setText] = useState('');
 
     const handleGetText = () => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0].id) {
                 chrome.tabs.sendMessage(
                     tabs[0].id,
-                    { action: "getSelectedText" },
+                    { action: 'getSelectedText' },
                     (response) => {
                         if (response?.text) {
                             setText(response.text);
                         } else {
-                            alert("No text selected!");
+                            alert('No text selected!');
                         }
-                    }
+                    },
                 );
             }
         });
