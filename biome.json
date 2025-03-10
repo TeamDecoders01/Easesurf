@@ -11,7 +11,10 @@
     "organizeImports": { "enabled": true },
     "linter": {
         "enabled": true,
-        "rules": { "recommended": true },
+        "rules": {
+            "recommended": true,
+            "style": { "noNonNullAssertion": "off" }
+        },
         "ignore": ["dist"]
     },
     "javascript": { "formatter": { "quoteStyle": "single" } },
