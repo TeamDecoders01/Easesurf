@@ -419,3 +419,22 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         });
     }
 });
+
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.contextMenus.create({
+        id: 'READ_ALOUD',
+        title: 'Read aloud',
+        contexts: ['selection'],
+    });
+});
+
+chrome.contextMenus.onClicked.addListener((info, _) => {
+    console.log({ info });
+    if (info.menuItemId === 'READ_ALOUD') {
+        const selectedText = info.selectionText;
+        console.log('Selected text:', selectedText);
+        if (selectedText) {
+            chrome.tts.speak(selectedText, { rate: 1.0, enqueue: false });
+        }
+    }
+});
