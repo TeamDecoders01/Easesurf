@@ -3,11 +3,7 @@
     "name": "Reading Assistant",
     "version": "1.0",
     "description": "Auto-scroll and blue light filter for better reading",
-    "permissions": ["storage", "tabs", "activeTab"],
     "host_permissions": ["<all_urls>"],
-    "background": {
-        "service_worker": "background.js"
-    },
     "action": {
         "default_popup": "index.html"
     },
@@ -21,5 +17,5 @@
     "background": {
         "service_worker": "background.js"
     },
-    "permissions": ["activeTab"]
+    "permissions": ["storage", "tabs", "activeTab"]
 }
