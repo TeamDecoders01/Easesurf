@@ -327,7 +327,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, _tab) => {
             );
         }
     }
-})
+});
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message.type === 'OPEN_EXTENSION_UI') {
@@ -339,5 +339,83 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
             height: 600,
         });
         sendResponse({ status: 'opened' });
+    }
+});
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    console.log({ changeInfo });
+    if (changeInfo.status === 'complete' && tab.url?.startsWith('http')) {
+        chrome.scripting.executeScript({
+            target: { tabId: tabId },
+            func: () => {
+                // Scan the DOM for elements missing any aria-* attributes.
+                const elements = document.body.querySelectorAll('*');
+                const totalElements = elements.length;
+                const missingAria = [];
+
+                for (const element of elements) {
+                    const hasAria = Array.from(element.attributes).some(
+                        (attr) => attr.name.startsWith('aria-'),
+                    );
+                    if (!hasAria) {
+                        missingAria.push(element);
+                    }
+                }
+
+                const missingCount = missingAria.length;
+                const ariaScore = 100 * (1 - missingCount / totalElements);
+
+                console.log(
+                    `Accessibility Score based on aria attributes: ${ariaScore.toFixed(2)}`,
+                );
+                console.log(`Total Elements: ${totalElements}`);
+                console.log(`Missing Aria-* Attributes: ${missingCount}`);
+
+                // Visual accessibility scoring logic
+                const IDEAL_FONT_SIZE_MIN = 12; // in pixels
+                const IDEAL_FONT_SIZE_MAX = 24; // in pixels
+                const BASE_SCORE = 100;
+
+                // Get the current font size from the root element.
+                const computedFontSize = Number.parseFloat(
+                    getComputedStyle(document.documentElement).fontSize,
+                );
+                let visualScore = BASE_SCORE;
+
+                // Penalize score based on font-size deviation.
+                if (computedFontSize < IDEAL_FONT_SIZE_MIN) {
+                    visualScore -= (IDEAL_FONT_SIZE_MIN - computedFontSize) * 2;
+                } else if (computedFontSize > IDEAL_FONT_SIZE_MAX) {
+                    visualScore -= (computedFontSize - IDEAL_FONT_SIZE_MAX) * 2;
+                }
+
+                // Check if High Contrast Mode is active using the 'forced-colors' media query.
+                const highContrast = window.matchMedia(
+                    '(forced-colors: active)',
+                ).matches;
+                if (!highContrast) {
+                    visualScore -= 10; // Deduct points if not in high contrast mode.
+                }
+
+                // Clamp the visual score between 0 and 100.
+                visualScore = Math.max(0, Math.min(visualScore, 100));
+
+                console.log(
+                    `Visual Accessibility Score: ${visualScore.toFixed(2)}`,
+                );
+
+                // Combine the two scores; adjust weighting as needed.
+                const finalScore = (ariaScore + visualScore) / 2;
+                console.log(
+                    `Final Accessibility Score: ${finalScore.toFixed(2)}`,
+                );
+
+                // Set the final score as a custom aria attribute on the document's root element.
+                document.documentElement.setAttribute(
+                    'aria-a11y-score',
+                    finalScore.toFixed(2),
+                );
+            },
+        });
     }
 });
