@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type ReactNode } from 'react';
+import { useState, type ChangeEvent, type ReactNode } from "react";
 
 export default function SimpleUI(): ReactNode {
     const [size, setSize] = useState(18);
@@ -16,25 +16,34 @@ export default function SimpleUI(): ReactNode {
 
             chrome.tabs.sendMessage(
                 tab,
-                { action: 'updateFontSize', fontSize: newSize },
-                console.log,
+                { action: "updateFontSize", fontSize: newSize },
+                console.log
             );
         });
     };
 
     return (
-        <div style={{ padding: '1rem' }}>
-            <h1>Simplified UI Controller</h1>
-            <label htmlFor="size">
-                Size:
-                <input
-                    type="number"
-                    name="size"
-                    value={size}
-                    onChange={handleInput}
-                    style={{ marginLeft: '0.5rem', width: '80px' }}
-                />
-            </label>
+        <div className="p-4 w-full flex justify-center items-center">
+            <div className="border-2 border-gray-300 rounded-lg p-4 shadow-md w-80 bg-white">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-gray-600 text-3xl font-bold">
+                        <strong>Simplified UI Controller</strong>
+                    </h2>
+                    <div className="flex items-center gap-2">
+                        <input
+                            type="range"
+                            min={10}
+                            max={40}
+                            value={size}
+                            onChange={handleInput}
+                            className="w-24 cursor-pointer accent-blue-500"
+                        />
+                        <span className="text-gray-700 font-medium w-10 text-center">
+                            {size}
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }

@@ -3,7 +3,6 @@ import { useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import { getAIResponse } from "../scripts/geminiChat";
 
-// Helper function to generate unique IDs
 const generateUniqueId = () => `message-${Date.now()}-${Math.random()}`;
 
 const ChatUI: React.FC = () => {
@@ -37,11 +36,13 @@ const ChatUI: React.FC = () => {
 
     return (
         <div className="p-4 w-80 border rounded-lg shadow-lg bg-white">
-            <h1 className="text-lg font-bold mb-4">AI Chat Assistant</h1>
+            <h2 className="text-2xl font-bold mb-4">
+                <strong>AI Chat Assistant</strong>
+            </h2>
             <div className="h-40 overflow-y-auto border p-2 mb-2 bg-gray-100">
                 {messages.map((msg) => (
                     <p
-                        key={msg.id} // Use unique ID as key
+                        key={msg.id}
                         className={
                             msg.type === "user"
                                 ? "text-right text-blue-600"
@@ -59,12 +60,12 @@ const ChatUI: React.FC = () => {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Ask something..."
-                    className="flex-1 p-2 border rounded"
+                    className="flex-1 p-3 border rounded"
                 />
                 <button
                     type="button"
                     onClick={handleSendMessage}
-                    className="bg-blue-500 text-white p-2 rounded"
+                    className="bg-blue-500 text-white p-3 rounded"
                 >
                     <FaPaperPlane />
                 </button>

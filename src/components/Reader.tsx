@@ -1,26 +1,25 @@
-// src/TTSUI.tsx
-import type React from 'react';
-import { useState } from 'react';
-import { FaPlay, FaStop } from 'react-icons/fa';
-import { startReadingText, stopReadingText } from '../scripts/ScreenReader';
+import type React from "react";
+import { useState } from "react";
+import { FaPlay, FaStop } from "react-icons/fa";
+import { startReadingText, stopReadingText } from "../scripts/ScreenReader";
 
 const Reader: React.FC = () => {
     const [isReading, setIsReading] = useState(false);
-    const [text, setText] = useState('');
+    const [text, setText] = useState("");
 
     const handleGetText = () => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0].id) {
                 chrome.tabs.sendMessage(
                     tabs[0].id,
-                    { action: 'getSelectedText' },
+                    { action: "getSelectedText" },
                     (response) => {
                         if (response?.text) {
                             setText(response.text);
                         } else {
-                            alert('No text selected!');
+                            alert("No text selected!");
                         }
-                    },
+                    }
                 );
             }
         });
@@ -40,7 +39,7 @@ const Reader: React.FC = () => {
 
     return (
         <div className="p-4 w-64">
-            <h1 className="text-lg font-bold mb-4">Text-to-Speech</h1>
+            <h2 className="text-lg font-bold mb-4">Text-to-Speech</h2>
             <button
                 type="button"
                 onClick={handleGetText}

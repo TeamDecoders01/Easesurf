@@ -38,6 +38,12 @@ h1 {
     line-height: 1.1;
 }
 
+h2 {
+    font-size: 1.4em;
+    line-height: 0.9;
+    margin-bottom: 1rem;
+}
+
 button {
     border-radius: 8px;
     border: 1px solid transparent;
@@ -48,6 +54,7 @@ button {
     background-color: #1a1a1a;
     cursor: pointer;
     transition: border-color 0.25s;
+    margin-right: 0.5rem;
 }
 
 button:hover {
@@ -58,6 +65,26 @@ button:focus,
 button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
+
+/* index.css */
+
+/* Custom spacing for components inside Popup */
+.popup-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* Add 24px vertical gap between each component */
+    padding: 16px;
+    /* Padding inside the container */
+    background-color: black;
+    color: white;
+}
+
+.popup-container>div {
+    margin-bottom: 16px;
+    /* Optional if you want to fine-tune the spacing */
+}
+
 
 @media (prefers-color-scheme: light) {
     :root {
