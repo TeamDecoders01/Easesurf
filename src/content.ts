@@ -1,6 +1,6 @@
-// content.ts
 import { PageMagnifier } from './scripts/Magnify';
-
+import { startAutoScroll, stopAutoScroll } from './scripts/Scroll';
+import { applySimplifiedUIMode } from './scripts/ui';
 // Import the new contrast mode functions
 import {
     toggleHighContrast,
@@ -64,4 +64,37 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
     // Return true to indicate we'll respond asynchronously
     return true;
+}
+
+chrome.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
+    console.log('Content script received:', request);
+    if (request.action === 'startScroll') {
+        startAutoScroll();
+    } else if (request.action === 'stopScroll') {
+        stopAutoScroll();
+    }
+});
+
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+    if (request.action === 'getSelectedText') {
+        const selectedText = window.getSelection()?.toString() || '';
+        sendResponse({ text: selectedText });
+    }
+});
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+    if (request.action === 'startChat') {
+        sendResponse({ status: 'Chat started' });
+    }
+});
+
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+    if (request.action === 'summarizePage') {
+        const pageText = document.body.innerText; 
+        sendResponse({ text: pageText });
+
+chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
+    if (request.action === 'updateFontSize' && request.fontSize) {
+        applySimplifiedUIMode(request.fontSize);
+        sendResponse({ status: 'success' });
+    }
 });
