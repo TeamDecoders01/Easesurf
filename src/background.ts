@@ -1,5 +1,3 @@
-// background.ts
-
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message.type === 'OPEN_EXTENSION_UI') {
         // Opens a new popup window with the extension's UI (e.g., index.html)
