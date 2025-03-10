@@ -15,20 +15,9 @@ function updateTextStyles(size: number): void {
     }
 }
 
-function updateLayoutStyles(): void {
-    const body = document.body;
-    if (body) {
-        body.style.backgroundColor = '#ffffff';
-        body.style.color = '#000000';
-        body.style.lineHeight = '1.6';
-        body.style.padding = '10px';
-    }
-}
-
 export function applySimplifiedUIMode(size: number): void {
     const selectorsToHide = ['.ad', '.advertisement', '.sidebar', '.popup'];
 
     hideElements(selectorsToHide);
     updateTextStyles(size);
-    updateLayoutStyles();
 }

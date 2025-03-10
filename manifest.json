@@ -15,18 +15,11 @@
         {
             "matches": ["<all_urls>"],
             "js": ["content.js"],
-            "run_at": "document_end"
+            "run_at": "document_idle"
         }
     ],
-
-    "web_accessible_resources": [
-        {
-            "resources": [
-                "rgblind/rgblind.js",
-                "rgblind/rgblind.css",
-                "rgblind/rgblind.svg"
-            ],
-            "matches": ["<all_urls>"]
-        }
-    ]
+    "background": {
+        "service_worker": "background.js"
+    },
+    "permissions": ["activeTab"]
 }
