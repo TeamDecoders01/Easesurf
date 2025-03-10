@@ -3,6 +3,9 @@
     "name": "Simplified UI Mode",
     "version": "1.0",
     "description": "Simplifies the UI by hiding unnecessary elements and improving readability.",
+    "action": {
+        "default_popup": "index.html"
+    },
     "content_scripts": [
         {
             "matches": ["<all_urls>"],
@@ -10,8 +13,8 @@
             "run_at": "document_idle"
         }
     ],
-    "action": {
-        "default_popup": "index.html"
+    "background": {
+        "service_worker": "background.js"
     },
-    "permissions": ["activeTab", "scripting", "storage"]
+    "permissions": ["activeTab"]
 }
